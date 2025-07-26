@@ -83,7 +83,7 @@ Sports outcomes are inherently uncertain. While this model is built and validate
 ## 📬 Contact
 
 For commercial licensing, questions or collaborations:  
-📧 zaratec@merrimack.edu 
+📧 carlosazarate13@gmail.com
 
 
 ---
