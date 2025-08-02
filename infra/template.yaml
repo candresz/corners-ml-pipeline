@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Corners - Planned AWS deployment (EC2/API + S3). Template provided as IaC, not deployed yet.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: corners
+  Environment:
+    Type: String
+    Default: dev
+
+Resources:
+  S3DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${ProjectName}-${Environment}-data-${AWS::AccountId}-${AWS::Region}"
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+    DeletionPolicy: Retain
+
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      RoleName: !Sub "${ProjectName}-${Environment}-ec2-role"
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles: [ !Ref EC2Role ]
+      InstanceProfileName: !Sub "${ProjectName}-${Environment}-ec2-instance-profile"
+
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group placeholder for future API host
+      VpcId: vpc-xxxxxxxx
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  PlannedDataBucketName:
+    Value: !Ref S3DataBucket
+    Description: Planned S3 bucket for data/artifacts (IaC; not yet deployed)
+  EC2InstanceProfileName:
+    Value: !Ref EC2InstanceProfile
+    Description: Instance profile for future EC2-based API
