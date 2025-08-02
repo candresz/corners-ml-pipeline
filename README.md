@@ -175,4 +175,16 @@ df_predictions.to_csv("predictions.csv", index=False)
 - Automate predictions and uploads with a CI/CD pipeline (GitHub Actions → S3).
 - Add automated dashboards with match statistics and parlay win-rate tracking.
 
+```mermaid
+flowchart LR
+  A[Client / Consumer] -->|HTTP| B[(Future API)]
+  B -->|Reads data| C[(Amazon S3<br/>releases/, iac/)]
+  B -->|Logs artifacts| C
+  subgraph Planned Deployment
+    B-.->D[EC2 or API Gateway + Lambda]
+  end
+  C:::s3
+classDef s3 fill:#eef,stroke:#88a,stroke-width:1px;
+
+
 
