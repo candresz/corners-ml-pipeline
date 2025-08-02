@@ -157,3 +157,15 @@ df_predictions.to_csv("predictions.csv", index=False)
 ```
 
 ---
+
+## AWS Artifacts & Planned Deployment
+
+- **Region:** us-east-1 (N. Virginia)
+- **S3 (private, versioned):** Release artifacts at `s3://<TU_BUCKET>/releases/`
+- **Infrastructure as Code:** `infra/template.yaml` (CloudFormation) describing a planned deployment:
+  - S3 (versioned, private) for data/artifacts
+  - IAM Role + Instance Profile for a future EC2-hosted API with S3 read-only access
+  - Security Group placeholder for API (HTTP/HTTPS)
+
+> **Note:** This project is not deployed yet. AWS resources are used only for hosting release artifacts (Amazon S3, private and versioned). A CloudFormation template (`infra/template.yaml`) documents a planned deployment path (EC2/API Gateway/Lambda + S3) for future rollout.
+
